@@ -1,7 +1,7 @@
 from urllib import request
 import json, os
 
-TOKEN = 'f39cb9f09d3c0b5032bc1883a6d135f8'
+TOKEN = '113e93e49ff413cbfd6bde234d4e8830'
 
 api = 'https://api.54heb.com/'
 checkTokenUrl = 'checktoken'
