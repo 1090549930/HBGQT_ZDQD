@@ -1,16 +1,37 @@
-# 这是一个示例 Python 脚本。
+from urllib import request
+import json, os
 
-# 按 ⌃R 执行或将其替换为您的代码。
-# 按 双击 ⇧ 在所有地方搜索类、文件、工具窗口、操作和设置。
+TOKEN = 'f39cb9f09d3c0b5032bc1883a6d135f8'
 
+api = 'https://api.54heb.com/'
+checkTokenUrl = 'checktoken'
+getClassListUrl = 'study/studyLink'
+clockUrl = 'study/statistics'
+clockParams = '?type=new&id='
 
-def print_hi(name):
-    # 在下面的代码行中使用断点来调试脚本。
-    print(f'Hi, {name}')  # 按 ⌘F8 切换断点。
+def sendRequest(url, params=''):
+  headers = {
+    'token' : TOKEN
+  }
+  req = request.Request(url=api+url+params, headers=headers)
+  res = request.urlopen(req)
+  data = json.load(res)
+  return data
 
+def main():
+  tokenVaildCode = sendRequest(checkTokenUrl)['code']
+  if (tokenVaildCode != 0):
+    raise Exception("error token code")
+  print('Success vaild token')
+  classList = sendRequest(getClassListUrl)['data']
+  newClassList = classList['new']
+  print('Get newest class:', newClassList['name'], newClassList['brief'])
 
-# 按间距中的绿色按钮以运行脚本。
+  clockCode = sendRequest(clockUrl, clockParams+str(newClassList['id']))['code']
+  if(clockCode != 0):
+    raise Exception("unsuccess clock")
+  else:
+    print('Success clock')
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# 访问 https://www.jetbrains.com/help/pycharm/ 获取 PyCharm 帮助
+    main()
